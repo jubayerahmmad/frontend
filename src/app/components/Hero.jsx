@@ -1,0 +1,124 @@
+"use client";
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+
+const HeroSection = () => {
+  const colors = [
+    {
+      bgColor: "#074b78",
+      ellipseColor: "#053f68",
+    },
+    {
+      bgColor: "#5a189a",
+      ellipseColor: "#3c096c",
+    },
+    {
+      bgColor: "#0f766e",
+      ellipseColor: "#115e59",
+    },
+    {
+      bgColor: "#b91c1c",
+      ellipseColor: "#7f1d1d",
+    },
+  ];
+  const images = [
+    "https://i.ibb.co/BKFqW5ps/slider-image.png",
+    "https://i.ibb.co/YBxt5dcp/slider-thumnail.png",
+    "https://i.ibb.co/BKFqW5ps/slider-image.png",
+    "https://i.ibb.co/YBxt5dcp/slider-thumnail.png",
+  ];
+
+  const [selectedImg, setSelectedImg] = useState(0);
+  const { bgColor, ellipseColor } = colors[selectedImg];
+
+  return (
+    <motion.div
+      className={`relative overflow-hidden bg-[#074b78] min-h-screen flex items-center px-10 md:px-20`}
+      animate={{ backgroundColor: bgColor }}
+      transition={{ duration: 0.6 }}
+    >
+      {/* ellipses*/}
+      <motion.div
+        className={`absolute top-[-200px] left-[-200px] w-[560px] h-[440px] lg:w-[1000px] lg:h-[800px] bg-[#053f68] rounded-full z-0`}
+        animate={{ backgroundColor: ellipseColor }}
+        transition={{ duration: 0.6 }}
+      ></motion.div>
+      <motion.div
+        className={`absolute bottom-[-250px] right-[-250px] w-[560px] h-[440px] lg:w-[700px] lg:h-[600px] bg-[#053f68] rounded-full z-0`}
+        animate={{ backgroundColor: ellipseColor }}
+        transition={{ duration: 0.6 }}
+      ></motion.div>
+
+      <div className="z-10 flex flex-col md:flex-row justify-between w-full items-center gap-10">
+        {/* Text Section */}
+        <div className="text-white max-w-xl">
+          <h1 className="text-6xl font-bold">BREAKFAST</h1>
+          <p className="text-lg font-semibold mt-4 leading-relaxed">
+            Breakfast, often referred to as the ‘most important meal of the
+            day’, provides essential nutrients to kick start our day. It
+            includes a variety of foods, like fruits, cereals, dairy products,
+            and proteins, that contribute to a balanced diet.
+          </p>
+
+          {/* Thumbnails */}
+          <div className="gap-6 mt-10 hidden lg:flex">
+            {images.map((img, idx) => (
+              <div
+                key={idx}
+                onClick={() => setSelectedImg(idx)}
+                className="cursor-pointer relative"
+              >
+                <img
+                  src={img}
+                  alt={`thumb-${idx}`}
+                  className="w-20 h-20 rounded-full object-cover"
+                />
+                {selectedImg === idx && (
+                  <div className="absolute bottom-[-12px] left-1/2 transform -translate-x-1/2 w-16 h-1 bg-white" />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Image Animation */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={selectedImg}
+            initial={{ x: 400, y: -100, opacity: 1 }}
+            exit={{ x: -400, y: 500, opacity: 0, duration: 2 }}
+            animate={{ x: 0, y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            <img
+              src={images[selectedImg]}
+              alt="main-breakfast"
+              className="w-72 h-72 lg:w-[400px] lg:h-[400px] object-cover"
+            />
+          </motion.div>
+        </AnimatePresence>
+        {/* Thumbnails */}
+        <div className="gap-6 lg:hidden flex">
+          {images.map((img, idx) => (
+            <div
+              key={idx}
+              onClick={() => setSelectedImg(idx)}
+              className="cursor-pointer relative"
+            >
+              <img
+                src={img}
+                alt={`thumb-${idx}`}
+                className="w-20 h-20 rounded-full object-cover"
+              />
+              {selectedImg === idx && (
+                <div className="absolute bottom-[-12px] left-1/2 transform -translate-x-1/2 w-16 h-1 bg-white rounded-full" />
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+export default HeroSection;
