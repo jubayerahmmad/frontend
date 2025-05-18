@@ -1,3 +1,5 @@
+import Clients from "./sections/Clients";
+import Feedback from "./sections/Feedback";
 import Footer from "./sections/Footer";
 import HeroSection from "./sections/Hero";
 import Navbar from "./sections/Navbar";
@@ -10,7 +12,9 @@ const Home = () => {
       <Navbar />
       <HeroSection />
       <ProductsSection />
+      <Feedback />
       <TeamSection />
+      <Clients />
       <Footer />
     </div>
   );
