@@ -5,6 +5,10 @@ import { AnimatePresence, motion } from "framer-motion";
 const HeroSection = () => {
   const colors = [
     {
+      bgColor: "#880808",
+      ellipseColor: "#A52A2A",
+    },
+    {
       bgColor: "#074b78",
       ellipseColor: "#053f68",
     },
@@ -15,10 +19,6 @@ const HeroSection = () => {
     {
       bgColor: "#0f766e",
       ellipseColor: "#115e59",
-    },
-    {
-      bgColor: "#b91c1c",
-      ellipseColor: "#7f1d1d",
     },
   ];
   const images = [
@@ -33,26 +33,26 @@ const HeroSection = () => {
 
   return (
     <motion.div
-      className={`relative overflow-hidden bg-[#074b78] min-h-screen flex items-center px-10 md:px-20`}
+      className={`relative overflow-hidden  min-h-screen flex items-center px-10 md:px-20 rounded-b-2xl`}
       animate={{ backgroundColor: bgColor }}
       transition={{ duration: 0.6 }}
     >
       {/* ellipses*/}
       <motion.div
-        className={`absolute top-[-200px] left-[-200px] w-[560px] h-[440px] lg:w-[1000px] lg:h-[800px] bg-[#053f68] rounded-full z-0`}
+        className={`absolute top-[-200px] left-[-200px] w-[560px] h-[440px] lg:w-[1000px] lg:h-[800px] rounded-full z-0`}
         animate={{ backgroundColor: ellipseColor }}
         transition={{ duration: 0.6 }}
       ></motion.div>
       <motion.div
-        className={`absolute bottom-[-250px] right-[-250px] w-[560px] h-[440px] lg:w-[700px] lg:h-[600px] bg-[#053f68] rounded-full z-0`}
+        className={`absolute bottom-[-250px] right-[-250px] w-[560px] h-[440px] lg:w-[700px] lg:h-[600px] rounded-full z-0`}
         animate={{ backgroundColor: ellipseColor }}
         transition={{ duration: 0.6 }}
       ></motion.div>
 
-      <div className="z-10 flex flex-col md:flex-row justify-between w-full items-center gap-10">
+      <div className="z-10 flex flex-col lg:flex-row justify-between w-full items-center gap-10">
         {/* Text Section */}
         <div className="text-white max-w-xl">
-          <h1 className="text-6xl font-bold">BREAKFAST</h1>
+          <h1 className="text-6xl font-bold pt-24 lg:pt-0">BREAKFAST</h1>
           <p className="text-lg font-semibold mt-4 leading-relaxed">
             Breakfast, often referred to as the ‘most important meal of the
             day’, provides essential nutrients to kick start our day. It
@@ -60,7 +60,7 @@ const HeroSection = () => {
             and proteins, that contribute to a balanced diet.
           </p>
 
-          {/* Thumbnails */}
+          {/* Thumbnails desktp*/}
           <div className="gap-6 mt-10 hidden lg:flex">
             {images.map((img, idx) => (
               <div
@@ -71,10 +71,10 @@ const HeroSection = () => {
                 <img
                   src={img}
                   alt={`thumb-${idx}`}
-                  className="w-20 h-20 rounded-full object-cover"
+                  className="w-32 h-32 rounded-full object-cover"
                 />
                 {selectedImg === idx && (
-                  <div className="absolute bottom-[-12px] left-1/2 transform -translate-x-1/2 w-16 h-1 bg-white" />
+                  <div className="absolute bottom-[-12px] left-1/2 transform -translate-x-1/2 w-24 h-1 bg-white" />
                 )}
               </div>
             ))}
@@ -97,7 +97,7 @@ const HeroSection = () => {
             />
           </motion.div>
         </AnimatePresence>
-        {/* Thumbnails */}
+        {/* Thumbnails mobile*/}
         <div className="gap-6 lg:hidden flex">
           {images.map((img, idx) => (
             <div
