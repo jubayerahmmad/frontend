@@ -32,7 +32,7 @@ const CategoryModal = ({ isCategoryModalOpen }) => {
             <input
               type="text"
               name="category"
-              placeholder="Add Food Category"
+              placeholder="Category Name"
               className="w-full bg-gray-700/20 border border-gray-100/50 text-white placeholder-gray-400 px-4 py-3 rounded-full focus:outline-none focus:ring-2 focus:ring-red-500/50"
               required
             />

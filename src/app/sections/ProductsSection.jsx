@@ -12,7 +12,7 @@ const ProductsSection = () => {
 
   useEffect(() => {
     const getProducts = async () => {
-      const { data } = await axios(`${process.env.NEXT_PUBLIC_API_URL}`);
+      const { data } = await axios(`${process.env.NEXT_PUBLIC_API_URL}/foods`);
       setProducts(data);
     };
 
