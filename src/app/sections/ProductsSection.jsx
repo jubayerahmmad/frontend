@@ -134,7 +134,7 @@ const ProductsSection = () => {
                 </>
               )}
             </div>
-            {products.length >= 6 && (
+            {products.length > 6 && (
               <div className="flex justify-center">
                 <button
                   onClick={() => setShowMore(!showMore)}
