@@ -4,6 +4,7 @@ import ProductCard from "../components/ProductCard";
 import AddFoodModal from "../components/AddFoodModal";
 import axios from "axios";
 import CategoryModal from "../components/CategoryModal";
+import { toast } from "sonner";
 
 const ProductsSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,7 +20,7 @@ const ProductsSection = () => {
     };
 
     getProducts();
-  }, []);
+  }, [setProducts]);
 
   useEffect(() => {
     const getCategories = async () => {
@@ -30,17 +31,17 @@ const ProductsSection = () => {
     };
 
     getCategories();
-  }, []);
-  console.log(categories);
+  }, [setCategories]);
 
-  const handleFilterCategory = (category) => {
-    if (category === "All") {
-      return;
+  const handleFilterCategory = async (category) => {
+    try {
+      const { data } = await axios(
+        `${process.env.NEXT_PUBLIC_API_URL}/foods?category=${category}`
+      );
+      setProducts(data);
+    } catch (error) {
+      toast.error(error.message || "Error");
     }
-    const filteredProducts = products.filter(
-      (product) => category === product?.category
-    );
-    setProducts(filteredProducts);
   };
 
   return (
@@ -64,7 +65,10 @@ const ProductsSection = () => {
           <div className="flex flex-wrap justify-center items-center gap-3">
             <button
               type="button"
-              onClick={() => handleFilterCategory("All")}
+              onClick={() => {
+                setActive("All");
+                handleFilterCategory("");
+              }}
               className={`rounded-full cursor-pointer px-3 py-1.5 ${
                 active === "All"
                   ? "text-white bg-[#2C2C2C]"
@@ -91,7 +95,7 @@ const ProductsSection = () => {
               </button>
             ))}
           </div>
-          {/* actions btn */}
+          {/* action btns */}
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsModalOpen(true)}
@@ -111,11 +115,17 @@ const ProductsSection = () => {
         </div>
 
         {/* cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20 py-4">
-          {products?.map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))}
-        </div>
+        {products.length > 0 ? (
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20 py-4">
+            {products?.map((product) => (
+              <ProductCard key={product._id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-4xl font-bold text-center p-12">
+            No Products Available in this Category
+          </p>
+        )}
       </div>
       {isModalOpen && (
         <AddFoodModal
