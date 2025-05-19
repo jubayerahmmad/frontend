@@ -1,23 +1,24 @@
 import { Star, StarIcon } from "lucide-react";
 import Image from "next/image";
 
-const ProductCard = () => {
+const ProductCard = ({ product }) => {
+  const { name, category, image } = product || {};
   return (
     <div className="shadow-md rounded-b-2xl">
       <div>
         <Image
-          src="https://i.ibb.co/1G1VygfQ/cards1.png"
+          src={image}
           alt="cards"
           className="w-full object-cover"
-          width={400}
-          height={300}
+          width={300}
+          height={150}
         />
       </div>
       <div className="p-2 md:p-4 space-y-3">
         <div className="flex justify-between items-center">
-          <h1 className="font-bold text-base md:text-xl">Chicken</h1>
+          <h1 className="font-bold text-base md:text-xl">{name}</h1>
           <p className="px-1.5 py-1 md:px-3 md:py-1.5 bg-[#F03328] text-white text-sm md:text-base font-semibold rounded-full">
-            Breakfast
+            {category}
           </p>
         </div>
         <div className="flex justify-between items-center">

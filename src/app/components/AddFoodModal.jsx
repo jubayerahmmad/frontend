@@ -1,26 +1,46 @@
 "use client";
-import { Upload, X } from "lucide-react";
+import { imgUpload } from "@/utils";
+import axios from "axios";
+import { Loader2, Upload } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const AddFoodModal = ({ isModalOpen, setIsModalOpen }) => {
-  const [formData, setFormData] = useState({
-    name: "",
-    category: "",
-    image: "",
-  });
+  const [imageFile, setImageFile] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+  const handleFileChange = (e) => {
+    e.preventDefault();
+    const file = e.target.files[0];
+    console.log(file);
+    setImageFile(file);
   };
 
-  const handleSave = () => {
-    console.log("Saving food item:", formData);
-    setIsModalOpen(false);
+  const handleSave = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    console.log(e);
+    const form = e.target;
+    const name = form.name.value;
+    const category = form.category.value;
+    const imageURL = await imgUpload(imageFile);
+    const data = { name, category, image: imageURL };
+
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/add`,
+        data
+      );
+      console.log(response);
+      toast.success("Data saved Successfully");
+    } catch (error) {
+      toast.error(error.message || "Failed to save");
+    } finally {
+      setIsModalOpen(false);
+      setLoading(false);
+    }
   };
+
   return (
     <div
       className={`${
@@ -32,15 +52,14 @@ const AddFoodModal = ({ isModalOpen, setIsModalOpen }) => {
           <h2 className="text-white text-xl font-medium">Add Food</h2>
         </div>
 
-        <div className="space-y-4">
+        <form onSubmit={handleSave} className="space-y-4">
           <div>
             <input
               type="text"
               name="name"
-              value={formData.name}
-              onChange={handleInputChange}
               placeholder="Food Name"
               className="w-full bg-gray-700/20 border border-gray-100/50 text-white placeholder-gray-400 px-4 py-3 rounded-full focus:outline-none focus:ring-2 focus:ring-red-500/50"
+              required
             />
           </div>
 
@@ -48,43 +67,52 @@ const AddFoodModal = ({ isModalOpen, setIsModalOpen }) => {
             <input
               type="text"
               name="category"
-              value={formData.category}
-              onChange={handleInputChange}
               placeholder="Food Category"
               className="w-full bg-gray-700/20 border border-gray-100/50 text-white placeholder-gray-400 px-4 py-3 rounded-full focus:outline-none focus:ring-2 focus:ring-red-500/50"
+              required
             />
           </div>
 
           <div className="relative">
             <label className="w-full flex items-center justify-center bg-gray-700/40 hover:bg-gray-700/60 text-gray-300 border border-dashed border-red-500/60 rounded-full px-4 py-2 transition duration-200 cursor-pointer">
               <Upload className="mr-2 h-5 w-5" />
-              <span>Upload or Drag image here</span>
+              <span>
+                {imageFile === ""
+                  ? `Upload or Drag image here`
+                  : `${
+                      imageFile?.name.length < 15
+                        ? imageFile?.name
+                        : `${imageFile?.name.slice(0, 15)}...${
+                            imageFile?.type.split("/")[1]
+                          }`
+                    }`}
+              </span>
               <input
                 type="file"
-                accept="image/*"
+                name="image"
+                id="imageFile"
                 className="hidden"
-                onChange={(e) => {
-                  if (e.target.files && e.target.files[0]) {
-                    setFormData({
-                      ...formData,
-                      image: e.target.files[0],
-                    });
-                  }
-                }}
+                onChange={handleFileChange}
+                required
               />
             </label>
           </div>
 
           <div>
             <button
-              type="button"
-              onClick={handleSave}
-              className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 rounded-full transition duration-200"
+              type="submit"
+              className="w-full bg-red-500 hover:bg-red-700 text-white font-medium py-2 rounded-full transition duration-200 cursor-pointer"
             >
-              Save
+              {loading ? (
+                <span className="flex items-center gap-2 justify-center">
+                  <Loader2 className="animate-spin" /> Saving...
+                </span>
+              ) : (
+                "Save"
+              )}
             </button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );
