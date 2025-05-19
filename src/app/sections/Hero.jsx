@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 const HeroSection = () => {
   const colors = [
@@ -82,23 +83,46 @@ const HeroSection = () => {
         </div>
 
         {/* Image Animation */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={selectedImg}
-            initial={{ x: 400, y: -100, opacity: 1 }}
-            exit={{ x: -400, y: 500, opacity: 0, duration: 2 }}
-            animate={{ x: 0, y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+        <div className="relative">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={selectedImg}
+              initial={{ x: 400, y: -100, opacity: 1 }}
+              exit={{ x: -400, y: 500, opacity: 0, duration: 2 }}
+              animate={{ x: 0, y: 0, opacity: 1 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
+              <img
+                src={images[selectedImg]}
+                alt="main-breakfast"
+                className="w-64 h-64 xl:w-[400px] xl:h-[400px] object-cover"
+              />
+            </motion.div>
+          </AnimatePresence>
+          <button
+            disabled={selectedImg === 0}
+            onClick={() => {
+              if (selectedImg === 0) return;
+              setSelectedImg(selectedImg - 1);
+            }}
+            className="lg:hidden disabled:text-gray-600 block absolute top-1/2 -left-16 p-2 rounded-full text-white bg-gray-600/40"
           >
-            <img
-              src={images[selectedImg]}
-              alt="main-breakfast"
-              className="w-72 h-72 lg:w-[400px] lg:h-[400px] object-cover"
-            />
-          </motion.div>
-        </AnimatePresence>
+            <ArrowLeft />
+          </button>
+          <button
+            disabled={images.length - 1 === selectedImg}
+            onClick={() => {
+              if (images.length - 1 === selectedImg) return;
+              setSelectedImg(selectedImg + 1);
+            }}
+            className="lg:hidden disabled:text-gray-500 block absolute top-1/2 -right-16 p-2 rounded-full text-white bg-gray-600/40"
+          >
+            <ArrowRight />
+          </button>
+        </div>
+
         {/* Thumbnails mobile*/}
-        <div className="gap-6 lg:hidden flex">
+        <div className="gap-6 lg:hidden flex pb-16">
           {images.map((img, idx) => (
             <div
               key={idx}

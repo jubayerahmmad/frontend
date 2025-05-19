@@ -8,7 +8,7 @@ import TeamSection from "./sections/TeamSection";
 
 const Home = () => {
   return (
-    <div>
+    <>
       <Navbar />
       <HeroSection />
       <ProductsSection />
@@ -16,7 +16,7 @@ const Home = () => {
       <TeamSection />
       <Clients />
       <Footer />
-    </div>
+    </>
   );
 };
 
