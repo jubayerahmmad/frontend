@@ -5,6 +5,7 @@ import AddFoodModal from "../components/AddFoodModal";
 import axios from "axios";
 import CategoryModal from "../components/CategoryModal";
 import { toast } from "sonner";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 const ProductsSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -12,6 +13,7 @@ const ProductsSection = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [active, setActive] = useState("All");
+  const [showMore, setShowMore] = useState(false);
 
   useEffect(() => {
     const getProducts = async () => {
@@ -116,11 +118,41 @@ const ProductsSection = () => {
 
         {/* cards */}
         {products.length > 0 ? (
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20 py-4">
-            {products?.map((product) => (
-              <ProductCard key={product._id} product={product} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20 py-4">
+              {showMore ? (
+                <>
+                  {products?.map((product) => (
+                    <ProductCard key={product._id} product={product} />
+                  ))}
+                </>
+              ) : (
+                <>
+                  {products?.slice(0, 6).map((product) => (
+                    <ProductCard key={product._id} product={product} />
+                  ))}
+                </>
+              )}
+            </div>
+            {products.length >= 6 && (
+              <div className="flex justify-center">
+                <button
+                  onClick={() => setShowMore(!showMore)}
+                  className="font-semibold bg-gray-700 text-gray-100 mx-auto px-3 py-1.5 rounded-2xl border border-gray-600 cursor-pointer"
+                >
+                  {showMore ? (
+                    <span className="flex items-center gap-2">
+                      <ChevronUp /> Show Less
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-2">
+                      <ChevronDown /> Show More
+                    </span>
+                  )}
+                </button>
+              </div>
+            )}
+          </>
         ) : (
           <p className="text-4xl font-bold text-center p-12">
             No Products Available in this Category
@@ -131,6 +163,7 @@ const ProductsSection = () => {
         <AddFoodModal
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
+          setProducts={setProducts}
         />
       )}
       {isCategoryModalOpen && (

@@ -5,7 +5,7 @@ import { Loader2, Upload } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-const AddFoodModal = ({ isModalOpen, setIsModalOpen }) => {
+const AddFoodModal = ({ isModalOpen, setIsModalOpen, setProducts }) => {
   const [imageFile, setImageFile] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -25,8 +25,12 @@ const AddFoodModal = ({ isModalOpen, setIsModalOpen }) => {
     const data = { name, category, image: imageURL };
 
     try {
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/foods/add`, data);
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/foods/add`,
+        data
+      );
       toast.success("Data saved Successfully");
+      setProducts((prev) => [...prev, res.data]);
     } catch (error) {
       toast.error(error.message || "Failed to save");
     } finally {
