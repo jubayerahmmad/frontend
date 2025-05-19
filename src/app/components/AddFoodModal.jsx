@@ -12,14 +12,12 @@ const AddFoodModal = ({ isModalOpen, setIsModalOpen }) => {
   const handleFileChange = (e) => {
     e.preventDefault();
     const file = e.target.files[0];
-    console.log(file);
     setImageFile(file);
   };
 
   const handleSave = async (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log(e);
     const form = e.target;
     const name = form.name.value;
     const category = form.category.value;
@@ -27,11 +25,7 @@ const AddFoodModal = ({ isModalOpen, setIsModalOpen }) => {
     const data = { name, category, image: imageURL };
 
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/foods/add`,
-        data
-      );
-      console.log(response);
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/foods/add`, data);
       toast.success("Data saved Successfully");
     } catch (error) {
       toast.error(error.message || "Failed to save");

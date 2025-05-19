@@ -9,6 +9,8 @@ const ProductsSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [active, setActive] = useState("All");
 
   useEffect(() => {
     const getProducts = async () => {
@@ -18,7 +20,29 @@ const ProductsSection = () => {
 
     getProducts();
   }, []);
-  console.log(products);
+
+  useEffect(() => {
+    const getCategories = async () => {
+      const { data } = await axios(
+        `${process.env.NEXT_PUBLIC_API_URL}/category`
+      );
+      setCategories(data);
+    };
+
+    getCategories();
+  }, []);
+  console.log(categories);
+
+  const handleFilterCategory = (category) => {
+    if (category === "All") {
+      return;
+    }
+    const filteredProducts = products.filter(
+      (product) => category === product?.category
+    );
+    setProducts(filteredProducts);
+  };
+
   return (
     <section className="pt-16 lg:pt-28 pb-6 px-6">
       <div className="container mx-auto">
@@ -40,28 +64,32 @@ const ProductsSection = () => {
           <div className="flex flex-wrap justify-center items-center gap-3">
             <button
               type="button"
-              className={`rounded-full cursor-pointer px-3 py-1.5 border border-gray-500/40 font-semibold`}
+              onClick={() => handleFilterCategory("All")}
+              className={`rounded-full cursor-pointer px-3 py-1.5 ${
+                active === "All"
+                  ? "text-white bg-[#2C2C2C]"
+                  : "border border-gray-500/40"
+              } font-semibold`}
             >
               All
             </button>
-            <button
-              type="button"
-              className={`rounded-full cursor-pointer px-3 py-1.5 border border-gray-500/40 font-semibold`}
-            >
-              Breakfast
-            </button>
-            <button
-              type="button"
-              className={`rounded-full cursor-pointer px-3 py-1.5 border border-gray-500/40 font-semibold`}
-            >
-              Lunch
-            </button>
-            <button
-              type="button"
-              className={`rounded-full cursor-pointer px-3 py-1.5 border border-gray-500/40 font-semibold`}
-            >
-              Dinner
-            </button>
+            {categories.map((category) => (
+              <button
+                key={category._id}
+                type="button"
+                onClick={() => {
+                  setActive(category?.category);
+                  handleFilterCategory(category?.category);
+                }}
+                className={`rounded-full cursor-pointer px-3 py-1.5 ${
+                  active === category.category
+                    ? "text-white bg-[#2C2C2C]"
+                    : "border border-gray-500/40"
+                } font-semibold`}
+              >
+                {category?.category}
+              </button>
+            ))}
           </div>
           {/* actions btn */}
           <div className="flex items-center gap-3">

@@ -1,20 +1,29 @@
 "use client";
 
+import axios from "axios";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
-const CategoryModal = ({ isCategoryModalOpen }) => {
+const CategoryModal = ({ isCategoryModalOpen, setIsCategoryModalOpen }) => {
   const [loading, setLoading] = useState(false);
   const handleSave = async (e) => {
-    // setLoading(true);
-    console.log(e);
-    const form = e.target;
+    e.preventDefault();
+    setLoading(true);
+    const category = e.target.category.value;
 
-    const category = form.category.value;
-    console.log(category);
-
-    setIsModalOpen(false);
-    // setLoading(false);
+    try {
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/category/add-category`,
+        { category }
+      );
+      toast.success("Category Added Successfully");
+    } catch (error) {
+      toast.error(error.message || "Failed to Add Category");
+    } finally {
+      setLoading(false);
+      setIsCategoryModalOpen(false);
+    }
   };
   return (
     <div
